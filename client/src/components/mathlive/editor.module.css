@@ -1,0 +1,31 @@
+math-field {
+    box-sizing: border-box;
+    padding: 0.5em;
+    width: 100%;
+    font-size: 1.25rem;
+    border-radius: 8px;
+    background-color: var(--off-white);
+    border: 1px solid #999;
+    color: var(--dark-gray);
+
+    &:focus-within {
+        outline: 2px solid var(--sky-blue);
+    }
+}
+
+body {
+    --keycap-height: 54px;
+    --keycap-font-size: 18px;
+}
+
+math-field::part(container) {
+    position: relative;
+}
+
+math-field::part(virtual-keyboard-toggle) {
+    color: var(--dark-gray);
+}
+
+math-field::part(menu-toggle) {
+    display: none;
+}
