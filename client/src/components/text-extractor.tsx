@@ -6,9 +6,9 @@ import { Progress } from "@/components/ui/progress";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import UploadDropzone from "@/components/upload-dropzone";
+import ImageCard from "@/components/image-card";
 
 import { saveTextAsDocx } from "@/lib/text-to-docx";
-import ImageCard from "./image-card";
 
 export default function TextExtractor() {
   const [imageUrl, setImageUrl] = useState("");
@@ -16,15 +16,13 @@ export default function TextExtractor() {
   const [recognizedText, setRecognizedText] = useState("");
   const [progress, setProgress] = useState(0);
 
-  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     if (event.target.files && event.target.files[0]) {
       setImageUrl(URL.createObjectURL(event.target.files[0]));
       setImageName(event.target.files[0].name);
     }
-  };
-
-  const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setRecognizedText(event.target.value);
   };
 
   const convertImageToText = useCallback(async () => {
@@ -81,7 +79,7 @@ export default function TextExtractor() {
           <Textarea
             placeholder="Recognized Text here..."
             value={recognizedText}
-            onChange={handleChange}
+            onChange={(event) => setRecognizedText(event.target.value)}
             className="w-full h-auto min-h-80 bg-off-white p-4 md:p-8 font-poppins"
           />
 
