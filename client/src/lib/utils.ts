@@ -14,3 +14,13 @@ export function fr<T = HTMLElement, P = React.HTMLAttributes<T>>(
   wrapped.displayName = component.name;
   return wrapped;
 }
+
+export function convertBytes(bytes: number, unit: "KB" | "MB"): number {
+  if (unit === "KB") {
+    return Math.round(bytes / 1024);
+  } else if (unit === "MB") {
+    return Math.round(bytes / (1024 * 1024));
+  } else {
+    throw new Error("Invalid unit");
+  }
+}
