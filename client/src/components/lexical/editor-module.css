@@ -5,6 +5,8 @@
     line-height: 20px;
     font-weight: 400;
     text-align: left;
+    border: 2px solid hsl(0, 0%, 80%);
+    border-radius: 6px;
 }
 
 .editor-inner {
@@ -411,7 +413,7 @@ i.undo {
 }
 
 i.redo {
-    background-image: url(//icons/arrow-clockwise.svg);
+    background-image: url(/icons/arrow-clockwise.svg);
 }
 
 i.bold {
