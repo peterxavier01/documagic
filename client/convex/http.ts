@@ -6,6 +6,7 @@ import { Webhook } from "svix";
 
 const http = httpRouter();
 
+// Convex HTTP Action to sync user data from Clerk with Convex DB
 http.route({
   path: "/clerk-users-webhook",
   method: "POST",
