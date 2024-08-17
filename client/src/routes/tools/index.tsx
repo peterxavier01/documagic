@@ -1,19 +1,19 @@
 import Heading from "@/components/heading";
 import ToolCard from "@/components/tool-card";
 import { tools } from "@/lib/data";
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/tools/")({
-  beforeLoad: async ({ context, location }) => {
-    if (!context.auth.isAuthenticated) {
-      throw redirect({
-        to: "/login",
-        search: {
-          redirect: location.href,
-        },
-      });
-    }
-  },
+  // beforeLoad: async ({ context, location }) => {
+  //   if (!context.auth.isAuthenticated) {
+  //     throw redirect({
+  //       to: "/login",
+  //       search: {
+  //         redirect: location.href,
+  //       },
+  //     });
+  //   }
+  // },
   component: Tools,
 });
 
@@ -30,7 +30,7 @@ function Tools() {
 
         <div className="mt-8 grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {tools.map((tool) => (
-            <ToolCard tool={tool} />
+            <ToolCard key={tool.id} tool={tool} />
           ))}
         </div>
       </div>
