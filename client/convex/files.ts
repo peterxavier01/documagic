@@ -1,6 +1,6 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
-import { getCurrentUserOrThrow } from "./users/users";
+import { getCurrentUserOrThrow } from "./users";
 
 export const getUploadsByUserId = query({
   handler: async (ctx) => {

@@ -16,7 +16,7 @@ import type {
 } from "convex/server";
 import type * as files from "../files.js";
 import type * as http from "../http.js";
-import type * as users_users from "../users/users.js";
+import type * as users from "../users.js";
 
 /**
  * A utility for referencing Convex functions in your app's API.
@@ -29,7 +29,7 @@ import type * as users_users from "../users/users.js";
 declare const fullApi: ApiFromModules<{
   files: typeof files;
   http: typeof http;
-  "users/users": typeof users_users;
+  users: typeof users;
 }>;
 export declare const api: FilterApi<
   typeof fullApi,
