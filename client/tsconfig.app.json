@@ -30,5 +30,6 @@
       ]
     }
   },
-  "include": ["src", "math-field.d.ts"]
+  "include": ["src", "math-field.d.ts", "./convex/**/*"],
+  "exclude": ["./convex/_generated"]
 }

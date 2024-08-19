@@ -20,6 +20,6 @@
     "isolatedModules": true,
     "noEmit": true
   },
-  "include": ["./**/*", "./convex/users.ts"],
+  "include": ["./**/*"],
   "exclude": ["./_generated"]
 }
