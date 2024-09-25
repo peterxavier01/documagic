@@ -9,7 +9,7 @@ export default function Heading({ title, className }: Readonly<HeadingProps>) {
   return (
     <h2
       className={cn(
-        "text-4xl md:text-5xl font-extrabold tracking-tight",
+        "text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight",
         className
       )}
     >

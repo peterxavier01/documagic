@@ -118,7 +118,7 @@
   }
 
   .header {
-    @apply text-4xl md:text-5xl text-center font-extrabold tracking-tight mb-12
+    @apply text-3xl md:text-4xl lg:text-5xl text-center font-extrabold tracking-tight mb-12
   }
 }
 
