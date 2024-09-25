@@ -3,7 +3,7 @@ import { ArrowUpDown } from "lucide-react";
 import { createFileRoute } from "@tanstack/react-router";
 
 import { api } from "../../../convex/_generated/api";
-import { useMutation } from "convex/react";
+import { Authenticated, useMutation } from "convex/react";
 
 import BackButton from "@/components/back-button";
 import Heading from "@/components/heading";
@@ -71,7 +71,9 @@ function TextExtractor() {
 
         <Editor data="" />
 
-        <RecentUpload />
+        <Authenticated>
+          <RecentUpload />
+        </Authenticated>
       </div>
     </main>
   );
