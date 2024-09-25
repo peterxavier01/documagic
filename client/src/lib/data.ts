@@ -12,8 +12,7 @@ export const socialIcons = [
 
 export const navLinks = [
   { id: 1, name: "Home", href: "/" },
-  { id: 2, name: "Tools", href: "/tools" },
-  { id: 3, name: "Pricing", href: "/pricing" },
+  { id: 2, name: "Pricing", href: "/pricing" },
   { id: 4, name: "Contact", href: "/contact" },
 ];
 
