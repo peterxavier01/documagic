@@ -6,7 +6,7 @@ export const getUploadsByUserId = query({
   handler: async (ctx) => {
     const user = await getCurrentUserOrThrow(ctx);
 
-    if (user === null) {
+    if (!user) {
       return null;
     }
 

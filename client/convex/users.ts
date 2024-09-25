@@ -20,7 +20,7 @@ export const current = query({
  */
 export async function getCurrentUser(ctx: QueryCtx) {
   const identity = await ctx.auth.getUserIdentity();
-  if (identity === null) {
+  if (!identity) {
     return null;
   }
   return await userByExternalId(ctx, identity.subject);
