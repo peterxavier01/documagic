@@ -13,111 +13,115 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as RegisterImport } from './routes/register'
-import { Route as LoginImport } from './routes/login'
-import { Route as IndexImport } from './routes/index'
 import { Route as ToolsIndexImport } from './routes/tools/index'
-import { Route as ToolsTextExtractorImport } from './routes/tools/text-extractor'
-import { Route as ToolsEquationExtractorImport } from './routes/tools/equation-extractor'
+import { Route as appIndexImport } from './routes/(app)/index'
+import { Route as authRegisterImport } from './routes/(auth)/register'
+import { Route as authLoginImport } from './routes/(auth)/login'
+import { Route as ToolstextTextExtractorImport } from './routes/tools/(text)/text-extractor'
+import { Route as ToolstextNewExtractionImport } from './routes/tools/(text)/new-extraction'
+import { Route as ToolsequationEquationExtractorImport } from './routes/tools/(equation)/equation-extractor'
+import { Route as ToolstextExtractionExtractionIdImport } from './routes/tools/(text)/extraction/$extractionId'
 
 // Create Virtual Routes
 
-const PricingLazyImport = createFileRoute('/pricing')()
-const ContactLazyImport = createFileRoute('/contact')()
+const appPricingLazyImport = createFileRoute('/(app)/pricing')()
+const appContactLazyImport = createFileRoute('/(app)/contact')()
 
 // Create/Update Routes
-
-const PricingLazyRoute = PricingLazyImport.update({
-  path: '/pricing',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/pricing.lazy').then((d) => d.Route))
-
-const ContactLazyRoute = ContactLazyImport.update({
-  path: '/contact',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/contact.lazy').then((d) => d.Route))
-
-const RegisterRoute = RegisterImport.update({
-  path: '/register',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const LoginRoute = LoginImport.update({
-  path: '/login',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const IndexRoute = IndexImport.update({
-  path: '/',
-  getParentRoute: () => rootRoute,
-} as any)
 
 const ToolsIndexRoute = ToolsIndexImport.update({
   path: '/tools/',
   getParentRoute: () => rootRoute,
 } as any)
 
-const ToolsTextExtractorRoute = ToolsTextExtractorImport.update({
+const appIndexRoute = appIndexImport.update({
+  path: '/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const appPricingLazyRoute = appPricingLazyImport
+  .update({
+    path: '/pricing',
+    getParentRoute: () => rootRoute,
+  } as any)
+  .lazy(() => import('./routes/(app)/pricing.lazy').then((d) => d.Route))
+
+const appContactLazyRoute = appContactLazyImport
+  .update({
+    path: '/contact',
+    getParentRoute: () => rootRoute,
+  } as any)
+  .lazy(() => import('./routes/(app)/contact.lazy').then((d) => d.Route))
+
+const authRegisterRoute = authRegisterImport.update({
+  path: '/register',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const authLoginRoute = authLoginImport.update({
+  path: '/login',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const ToolstextTextExtractorRoute = ToolstextTextExtractorImport.update({
   path: '/tools/text-extractor',
   getParentRoute: () => rootRoute,
 } as any)
 
-const ToolsEquationExtractorRoute = ToolsEquationExtractorImport.update({
-  path: '/tools/equation-extractor',
+const ToolstextNewExtractionRoute = ToolstextNewExtractionImport.update({
+  path: '/tools/new-extraction',
   getParentRoute: () => rootRoute,
 } as any)
+
+const ToolsequationEquationExtractorRoute =
+  ToolsequationEquationExtractorImport.update({
+    path: '/tools/equation-extractor',
+    getParentRoute: () => rootRoute,
+  } as any)
+
+const ToolstextExtractionExtractionIdRoute =
+  ToolstextExtractionExtractionIdImport.update({
+    path: '/tools/extraction/$extractionId',
+    getParentRoute: () => rootRoute,
+  } as any)
 
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexImport
-      parentRoute: typeof rootRoute
-    }
-    '/login': {
+    '/(auth)/login': {
       id: '/login'
       path: '/login'
       fullPath: '/login'
-      preLoaderRoute: typeof LoginImport
+      preLoaderRoute: typeof authLoginImport
       parentRoute: typeof rootRoute
     }
-    '/register': {
+    '/(auth)/register': {
       id: '/register'
       path: '/register'
       fullPath: '/register'
-      preLoaderRoute: typeof RegisterImport
+      preLoaderRoute: typeof authRegisterImport
       parentRoute: typeof rootRoute
     }
-    '/contact': {
+    '/(app)/contact': {
       id: '/contact'
       path: '/contact'
       fullPath: '/contact'
-      preLoaderRoute: typeof ContactLazyImport
+      preLoaderRoute: typeof appContactLazyImport
       parentRoute: typeof rootRoute
     }
-    '/pricing': {
+    '/(app)/pricing': {
       id: '/pricing'
       path: '/pricing'
       fullPath: '/pricing'
-      preLoaderRoute: typeof PricingLazyImport
+      preLoaderRoute: typeof appPricingLazyImport
       parentRoute: typeof rootRoute
     }
-    '/tools/equation-extractor': {
-      id: '/tools/equation-extractor'
-      path: '/tools/equation-extractor'
-      fullPath: '/tools/equation-extractor'
-      preLoaderRoute: typeof ToolsEquationExtractorImport
-      parentRoute: typeof rootRoute
-    }
-    '/tools/text-extractor': {
-      id: '/tools/text-extractor'
-      path: '/tools/text-extractor'
-      fullPath: '/tools/text-extractor'
-      preLoaderRoute: typeof ToolsTextExtractorImport
+    '/(app)/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof appIndexImport
       parentRoute: typeof rootRoute
     }
     '/tools/': {
@@ -127,20 +131,50 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ToolsIndexImport
       parentRoute: typeof rootRoute
     }
+    '/tools/(equation)/equation-extractor': {
+      id: '/tools/equation-extractor'
+      path: '/tools/equation-extractor'
+      fullPath: '/tools/equation-extractor'
+      preLoaderRoute: typeof ToolsequationEquationExtractorImport
+      parentRoute: typeof rootRoute
+    }
+    '/tools/(text)/new-extraction': {
+      id: '/tools/new-extraction'
+      path: '/tools/new-extraction'
+      fullPath: '/tools/new-extraction'
+      preLoaderRoute: typeof ToolstextNewExtractionImport
+      parentRoute: typeof rootRoute
+    }
+    '/tools/(text)/text-extractor': {
+      id: '/tools/text-extractor'
+      path: '/tools/text-extractor'
+      fullPath: '/tools/text-extractor'
+      preLoaderRoute: typeof ToolstextTextExtractorImport
+      parentRoute: typeof rootRoute
+    }
+    '/tools/(text)/extraction/$extractionId': {
+      id: '/tools/extraction/$extractionId'
+      path: '/tools/extraction/$extractionId'
+      fullPath: '/tools/extraction/$extractionId'
+      preLoaderRoute: typeof ToolstextExtractionExtractionIdImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
 // Create and export the route tree
 
 export const routeTree = rootRoute.addChildren({
-  IndexRoute,
-  LoginRoute,
-  RegisterRoute,
-  ContactLazyRoute,
-  PricingLazyRoute,
-  ToolsEquationExtractorRoute,
-  ToolsTextExtractorRoute,
+  authLoginRoute,
+  authRegisterRoute,
+  appContactLazyRoute,
+  appPricingLazyRoute,
+  appIndexRoute,
   ToolsIndexRoute,
+  ToolsequationEquationExtractorRoute,
+  ToolstextNewExtractionRoute,
+  ToolstextTextExtractorRoute,
+  ToolstextExtractionExtractionIdRoute,
 })
 
 /* prettier-ignore-end */
@@ -151,39 +185,47 @@ export const routeTree = rootRoute.addChildren({
     "__root__": {
       "filePath": "__root.tsx",
       "children": [
-        "/",
         "/login",
         "/register",
         "/contact",
         "/pricing",
+        "/",
+        "/tools/",
         "/tools/equation-extractor",
+        "/tools/new-extraction",
         "/tools/text-extractor",
-        "/tools/"
+        "/tools/extraction/$extractionId"
       ]
     },
-    "/": {
-      "filePath": "index.tsx"
-    },
     "/login": {
-      "filePath": "login.tsx"
+      "filePath": "(auth)/login.tsx"
     },
     "/register": {
-      "filePath": "register.tsx"
+      "filePath": "(auth)/register.tsx"
     },
     "/contact": {
-      "filePath": "contact.lazy.tsx"
+      "filePath": "(app)/contact.lazy.tsx"
     },
     "/pricing": {
-      "filePath": "pricing.lazy.tsx"
+      "filePath": "(app)/pricing.lazy.tsx"
     },
-    "/tools/equation-extractor": {
-      "filePath": "tools/equation-extractor.tsx"
-    },
-    "/tools/text-extractor": {
-      "filePath": "tools/text-extractor.tsx"
+    "/": {
+      "filePath": "(app)/index.tsx"
     },
     "/tools/": {
       "filePath": "tools/index.tsx"
+    },
+    "/tools/equation-extractor": {
+      "filePath": "tools/(equation)/equation-extractor.tsx"
+    },
+    "/tools/new-extraction": {
+      "filePath": "tools/(text)/new-extraction.tsx"
+    },
+    "/tools/text-extractor": {
+      "filePath": "tools/(text)/text-extractor.tsx"
+    },
+    "/tools/extraction/$extractionId": {
+      "filePath": "tools/(text)/extraction/$extractionId.tsx"
     }
   }
 }
