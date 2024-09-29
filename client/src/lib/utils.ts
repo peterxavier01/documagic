@@ -1,4 +1,5 @@
 import { type ClassValue, clsx } from "clsx";
+import { Id } from "../../convex/_generated/dataModel";
 import { ForwardRefRenderFunction, forwardRef } from "react";
 import { twMerge } from "tailwind-merge";
 
@@ -23,4 +24,21 @@ export function convertBytes(bytes: number, unit: "KB" | "MB"): number {
   } else {
     throw new Error("Invalid unit");
   }
+}
+
+export function getImageURL(storageId: Id<"conversions">) {
+  const convexSiteUrl = import.meta.env.VITE_CONVEX_SITE_URL;
+
+  // Retrieve the file URL of the uploaded file
+  const getImageUrl = new URL(`${convexSiteUrl}/getFileURL`);
+  getImageUrl.searchParams.set("storageId", storageId);
+  return getImageUrl.href;
+}
+
+export function clipText(text: string, maxLength: number) {
+  if (text.length > maxLength) {
+    return text.slice(0, maxLength) + "...";
+  }
+
+  return text;
 }
