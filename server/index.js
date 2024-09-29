@@ -37,6 +37,26 @@ app.post("/api/extract-equation", async (req, res) => {
   }
 });
 
+// Endpoint to get extract text from images
+app.post("/api/extract-text", async (req, res) => {
+  try {
+    const { imageUrl } = req.body;
+
+    const result = await replicate.run(
+      "abiruyt/text-extract-ocr:a524caeaa23495bc9edc805ab08ab5fe943afd3febed884a4f3747aa32e9cd61",
+      {
+        input: {
+          image: imageUrl,
+        },
+      }
+    );
+
+    return res.json(result);
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+});
+
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
 });
