@@ -1,5 +1,8 @@
 import { v } from "convex/values";
-import { mutation, query } from "./_generated/server";
+import { paginationOptsValidator } from "convex/server";
+import { mutation, MutationCtx, query } from "./_generated/server";
+import { Id } from "./_generated/dataModel";
+
 import { getCurrentUserOrThrow } from "./users";
 
 export const getUploadsByUserId = query({
@@ -27,7 +30,7 @@ export const generateUploadUrl = mutation(async (ctx) => {
 });
 
 /**
- * This mutation is used to send an image to Convex storage.
+ * This mutation is used to save an image to Convex storage.
  */
 export const sendImage = mutation({
   args: {
@@ -35,6 +38,7 @@ export const sendImage = mutation({
     documentSize: v.number(),
     documentName: v.string(),
     toolUsed: v.string(),
+    extractedText: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     const user = await getCurrentUserOrThrow(ctx);
@@ -45,6 +49,68 @@ export const sendImage = mutation({
       documentName: args.documentName,
       documentId: args.storageId,
       toolUsed: args.toolUsed,
+      extractedText: args.extractedText,
     });
+  },
+});
+
+/**
+ * Returns a list of all conversions with pagination
+ */
+export const getConversions = query({
+  args: { paginationOpts: paginationOptsValidator, userId: v.id("users") },
+  handler: async (ctx, args) => {
+    const conversions = await ctx.db
+      .query("conversions")
+      .filter((q) => q.eq(q.field("userId"), args.userId))
+      .order("desc")
+      .paginate(args.paginationOpts);
+
+    return conversions;
+  },
+});
+
+/**
+ * Return a single conversion document
+ */
+export const getConversion = query({
+  args: { conversionId: v.id("conversions") },
+  handler: async (ctx, args) => {
+    return await ctx.db.get(args.conversionId);
+  },
+});
+
+/**
+ * Update an existing conversion document
+ */
+export const updateConversion = mutation({
+  args: {
+    conversionId: v.id("conversions"),
+    documentName: v.string(),
+    extractedText: v.string(),
+  },
+  handler: async (ctx, args) => {
+    await ctx.db.patch(args.conversionId, {
+      documentName: args.documentName,
+      extractedText: args.extractedText,
+    });
+  },
+});
+
+/**
+ * Delete image from storage by its ID
+ */
+async function deleteImageById(ctx: MutationCtx, storageId: Id<"_storage">) {
+  await ctx.storage.delete(storageId);
+}
+
+/**
+ * Delete a single conversion document
+ */
+export const deleteConversion = mutation({
+  args: { conversionId: v.id("conversions"), storageId: v.id("_storage") },
+  handler: async (ctx, args) => {
+    await ctx.db.delete(args.conversionId);
+    await deleteImageById(ctx, args.storageId);
   },
 });
