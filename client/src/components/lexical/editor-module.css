@@ -329,6 +329,7 @@ pre::-webkit-scrollbar-thumb {
     border-start-start-radius: var(--rounded-md);
     border-start-end-radius: var(--rounded-md);
     vertical-align: middle;
+    overflow-x: auto;
 }
 
 .toolbar button.toolbar-item {
