@@ -1,21 +1,26 @@
 import { useEffect } from "react";
-import { $getSelection, $isRangeSelection } from "lexical";
+import {
+  $createTextNode,
+  $getSelection,
+  $isRangeSelection,
+  TextNode,
+} from "lexical";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import { LexicalComposer } from "@lexical/react/LexicalComposer";
-import { AutoFocusPlugin } from "@lexical/react/LexicalAutoFocusPlugin";
+// import { AutoFocusPlugin } from "@lexical/react/LexicalAutoFocusPlugin";
 import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
 import { ContentEditable } from "@lexical/react/LexicalContentEditable";
 import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
 import { LexicalErrorBoundary } from "@lexical/react/LexicalErrorBoundary";
 
-import { $createMathNode, MathNode } from "@/components/lexical/math-node";
+// import { $createMathNode } from "@/components/lexical/math-node";
 import ToolbarPlugin from "@/components/lexical/plugins/ToolbarPlugin";
 
 import "./editor-module.css";
 
 const editorConfig = {
   namespace: "MyEditor",
-  nodes: [MathNode],
+  nodes: [TextNode],
   onError(error: Error) {
     throw error;
   },
@@ -34,12 +39,20 @@ function EditorContent({ data }: EditorProps) {
   useEffect(() => {
     if (data) {
       editor.update(() => {
-        const mathNode = $createMathNode(data);
+        // Create a text node with the extracted text
+        const textNode = $createTextNode(data);
         const selection = $getSelection();
 
         if ($isRangeSelection(selection)) {
-          selection.insertNodes([mathNode]);
+          selection.insertNodes([textNode]);
         }
+
+        // const mathNode = $createMathNode(data);
+        // const selection = $getSelection();
+
+        // if ($isRangeSelection(selection)) {
+        //   selection.insertNodes([mathNode]);
+        // }
       });
     }
   }, [data, editor]);
@@ -59,7 +72,7 @@ function EditorContent({ data }: EditorProps) {
         ErrorBoundary={LexicalErrorBoundary}
       />
       <HistoryPlugin />
-      <AutoFocusPlugin />
+      {/* <AutoFocusPlugin /> */}
     </div>
   );
 }
