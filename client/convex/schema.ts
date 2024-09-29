@@ -17,5 +17,6 @@ export default defineSchema({
     documentName: v.string(),
     documentId: v.string(),
     toolUsed: v.string(),
+    extractedText: v.optional(v.string()),
   }),
 });
