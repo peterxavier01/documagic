@@ -5,7 +5,7 @@ import { api } from "../../../../convex/_generated/api";
 import { useState } from "react";
 
 import UploadDropzone from "@/components/upload-dropzone";
-import Editor from "@/components/lexical/editor";
+import Editor from "@/components/lexical/text-editor";
 import RecentUpload from "@/components/recent-upload";
 import BackButton from "@/components/back-button";
 import Heading from "@/components/heading";
