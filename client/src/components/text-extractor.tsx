@@ -8,8 +8,6 @@ import { Button } from "@/components/ui/button";
 import UploadDropzone from "@/components/upload-dropzone";
 import ImageCard from "@/components/image-card";
 
-import { saveTextAsDocx } from "@/lib/text-to-docx";
-
 export default function TextExtractor() {
   const [imageUrl, setImageUrl] = useState("");
   const [imageName, setImageName] = useState("");
@@ -83,10 +81,7 @@ export default function TextExtractor() {
             className="w-full h-auto min-h-80 bg-off-white p-4 md:p-8 font-poppins"
           />
 
-          <Button
-            onClick={() => saveTextAsDocx(recognizedText)}
-            disabled={!recognizedText}
-          >
+          <Button onClick={() => {}} disabled={!recognizedText}>
             Download (.docx)
           </Button>
         </div>
