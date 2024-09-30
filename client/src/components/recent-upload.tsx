@@ -24,7 +24,6 @@ export default function RecentUpload() {
       <Table className="mt-4 text-slate-800">
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[100px]">Document ID</TableHead>
             <TableHead>Document Name</TableHead>
             <TableHead>Size</TableHead>
             <TableHead className="text-right">Uploaded At</TableHead>
@@ -37,9 +36,6 @@ export default function RecentUpload() {
 
                 return (
                   <TableRow key={upload._id}>
-                    <TableCell className="font-medium">
-                      {upload.documentId}
-                    </TableCell>
                     <TableCell>{upload.documentName}</TableCell>
                     <TableCell className="truncate">
                       {convertBytes(upload.documentSize, "KB") + " KB"}
