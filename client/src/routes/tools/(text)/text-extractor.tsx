@@ -37,7 +37,7 @@ function TextExtractor() {
   return (
     <main className="py-12 font-poppins bg-white min-h-[calc(100dvh-60px)]">
       <div className="section-wrapper">
-        <section className="flex items-center justify-between mb-12">
+        <section className="flex flex-wrap gap-8 items-center justify-between mb-12">
           <div>
             <BackButton title="Tools" href="/tools" />
 
