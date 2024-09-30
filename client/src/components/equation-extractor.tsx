@@ -4,7 +4,7 @@ import axios from "axios";
 // import { toast } from "sonner";
 
 import UploadDropzone from "@/components/upload-dropzone";
-import Editor from "@/components/lexical/editor";
+import Editor from "@/components/lexical/text-editor";
 
 import ImageCard from "@/components/image-card";
 
