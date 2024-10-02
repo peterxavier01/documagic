@@ -1,62 +1,99 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { ArrowUpDown, Download } from "lucide-react";
-import { useState } from "react";
+import { Plus } from "lucide-react";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { usePaginatedQuery, useQuery } from "convex/react";
+
+import { api } from "../../../../convex/_generated/api";
+import { Id } from "../../../../convex/_generated/dataModel";
 
 import BackButton from "@/components/back-button";
 import Heading from "@/components/heading";
-import UploadDropzone from "@/components/upload-dropzone";
-import MathField from "@/components/mathlive/math-field";
 import { Button } from "@/components/ui/button";
+import ExtractionCard from "@/components/extraction-card";
+
+import Empty from "../../../assets/empty.jpg";
 
 export const Route = createFileRoute("/tools/(equation)/equation-extractor")({
   component: EquationExtractor,
 });
 
 function EquationExtractor() {
-  const [, setImageUrl] = useState("");
-  const [, setImageName] = useState("");
+  const currentUser = useQuery(api.users.current);
+  const userId = currentUser?._id as Id<"users">;
 
-  const [mathValue, setMathValue] = useState<string>("E=mc^2");
-  const handleChange = (value: string) => {
-    setMathValue(value);
-  };
+  // Don't run the query if userId is undefined
+  const { results, status, loadMore } = usePaginatedQuery(
+    api.files.getConversions,
+    userId ? { userId, toolUsed: "equation extractor" } : "skip",
+    { initialNumItems: 10 }
+  );
 
-  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files && event.target.files[0]) {
-      setImageUrl(URL.createObjectURL(event.target.files[0]));
-      setImageName(event.target.files[0].name);
-    }
-  };
+  if (!userId) {
+    return (
+      <div className="min-h-screen flex flex-col gap-4 items-center justify-center bg-white">
+        <div className="size-8 rounded-full border-4 border-slate-800 border-t-transparent animate-spin " />
+        <p className="text-primary font-medium text-lg">
+          Docu<span className="text-coral">Magic</span>
+        </p>
+      </div>
+    );
+  }
 
   return (
     <main className="py-12 font-poppins bg-white min-h-[calc(100dvh-60px)]">
       <div className="section-wrapper">
-        <BackButton title="Tools" href="/tools" />
+        <section className="flex flex-wrap gap-8 items-center justify-between mb-12">
+          <div>
+            <BackButton title="Tools" href="/tools" />
 
-        <Heading
-          title="Equation Extractor"
-          className="mt-8 mb-12 text-slate-800"
-        />
-
-        <UploadDropzone
-          onChange={handleImageChange}
-          setImageName={setImageName}
-          setImageUrl={setImageUrl}
-        />
-
-        <div className="my-8 flex items-center justify-center">
-          <ArrowUpDown className="text-dark-gray" size={22} />
-        </div>
-
-        <section>
-          <MathField value={mathValue} onChange={handleChange} />
-          <div className="ml-auto w-max mt-2">
-            <Button className="flex items-center gap-2">
-              <Download />
-              Download
-            </Button>
+            <Heading
+              title="Equation Extractor"
+              className="mt-4 text-slate-800"
+            />
+          </div>
+          <div>
+            <Link to="/tools/equation/new-extraction">
+              <Button className="gap-2">
+                <Plus />
+                <span>New Extraction</span>
+              </Button>
+            </Link>
           </div>
         </section>
+
+        {!results.length ? (
+          <div className="flex flex-col items-center">
+            <div className="max-w-[500px] h-auto">
+              <img
+                src={Empty}
+                alt="illustration with a screen showing 'no data'"
+                className="w-full block"
+              />
+            </div>
+            <p className="font-medium text-base md:text-lg">
+              No extractions yet.
+            </p>
+          </div>
+        ) : (
+          <section>
+            <div className="space-y-4">
+              {results?.map((item) => (
+                <ExtractionCard
+                  key={item._id}
+                  item={item}
+                  href="/tools/equation/extraction/$extractionId"
+                />
+              ))}
+            </div>
+
+            <Button
+              onClick={() => loadMore(5)}
+              disabled={status !== "CanLoadMore"}
+              className="flex mt-4 ml-auto bg-dark-gray text-white hover:bg-dark-gray/80"
+            >
+              Load More
+            </Button>
+          </section>
+        )}
       </div>
     </main>
   );
