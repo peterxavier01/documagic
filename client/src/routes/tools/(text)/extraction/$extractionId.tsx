@@ -44,7 +44,7 @@ function EditExtractionPage() {
 
   async function deleteExtractionDocument() {
     try {
-      // deletes conversion document and image from convex storage
+      // deletes both conversion document and image from convex storage
       await deleteConversion({
         conversionId,
         storageId: conversion?.documentId as Id<"_storage">,
