@@ -1,12 +1,11 @@
 import { useCallback, useState } from "react";
 import axios from "axios";
 
-// import { toast } from "sonner";
-
 import UploadDropzone from "@/components/upload-dropzone";
 import Editor from "@/components/lexical/text-editor";
-
 import ImageCard from "@/components/image-card";
+
+import { getServerURL } from "@/lib/utils";
 
 export default function EquationExtractor() {
   const [imageUrl, setImageUrl] = useState("");
@@ -15,21 +14,18 @@ export default function EquationExtractor() {
 
   // Get the latex string from the image from the API
   const getLatexString = useCallback(async () => {
+    const serverURL = getServerURL();
+
     try {
-      const response = await axios.post(
-        "http://localhost:8000/api/extract-equation",
-        // { imageUrl }
-        {
-          imageUrl:
-            "https://replicate.delivery/pbxt/LPna8fq3VaJKA7kYAgHC75sxHHxVZU2HqjEH9WCP9nCq7Pts/math.jpg",
-        }
-      );
+      const response = await axios.post(`${serverURL}/api/extract-equation`, {
+        imageUrl,
+      });
       setData(response.data);
       console.log(response.data);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
-  }, []);
+  }, [imageUrl]);
 
   const handleImageChange = async (
     event: React.ChangeEvent<HTMLInputElement>
