@@ -6,6 +6,7 @@ import {
   $getRoot,
   $getSelection,
   $isRangeSelection,
+  EditorState,
   TextNode,
 } from "lexical";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
@@ -14,6 +15,7 @@ import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
 import { ContentEditable } from "@lexical/react/LexicalContentEditable";
 import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
 import { LexicalErrorBoundary } from "@lexical/react/LexicalErrorBoundary";
+import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
 
 import ToolbarPlugin from "@/components/lexical/plugins/ToolbarPlugin";
 import { Button } from "@/components/ui/button";
@@ -30,36 +32,48 @@ const editorConfig = {
   },
 };
 
-const placeholder = "Text goes here...";
+const placeholder = "Start typing...";
 
 type EditorProps = {
-  data: string | null;
+  data?: string | null;
+  extractedText?: string;
+  setExtractedText?: (extractedText: string) => void;
 };
 
-function EditorContent({ data }: EditorProps) {
+function EditorContent({ data, setExtractedText }: EditorProps) {
   const [editor] = useLexicalComposerContext();
+
+  // Function to handle changes in the editor
+  function handleEditorChange(editorState: EditorState) {
+    editorState.read(() => {
+      const root = $getRoot();
+      const textContent = root.getTextContent();
+      if (setExtractedText) {
+        setExtractedText(textContent); // Update editor state
+      }
+    });
+  }
 
   // Inject text into editor when data is loaded from the API.
   useEffect(() => {
     if (data) {
       editor.update(() => {
-        // Create a paragraph node to hold the text node
-        const paragraphNode = $createParagraphNode();
-        const textNode = $createTextNode(data);
+        const root = $getRoot();
+        const existingContent = root.getTextContent();
 
-        // Append the text node to the paragraph
-        paragraphNode.append(textNode);
+        // Only inject text if it isn't already present in the editor
+        if (!existingContent.includes(data)) {
+          const paragraphNode = $createParagraphNode();
+          const textNode = $createTextNode(data);
+          paragraphNode.append(textNode);
 
-        // Get the current selection
-        const selection = $getSelection();
+          const selection = $getSelection();
 
-        if ($isRangeSelection(selection)) {
-          // Insert the paragraph at the selection
-          selection.insertNodes([paragraphNode]);
-        } else {
-          // Fallback: append the paragraph to the root if there's no selection
-          const root = $getRoot();
-          root.append(paragraphNode);
+          if ($isRangeSelection(selection)) {
+            selection.insertNodes([paragraphNode]);
+          } else {
+            root.append(paragraphNode);
+          }
         }
       });
     }
@@ -80,6 +94,7 @@ function EditorContent({ data }: EditorProps) {
         ErrorBoundary={LexicalErrorBoundary}
       />
       <HistoryPlugin />
+      <OnChangePlugin onChange={handleEditorChange} />
     </div>
   );
 }
@@ -95,15 +110,20 @@ function SaveDocxButton() {
   );
 }
 
-function Editor({ data }: EditorProps) {
+function Editor({ data, setExtractedText, extractedText }: EditorProps) {
   return (
     <section className="font-poppins w-full">
       <LexicalComposer initialConfig={editorConfig}>
         <div className="editor-container">
           <ToolbarPlugin />
 
-          <EditorContent data={data} />
+          <EditorContent
+            data={data}
+            setExtractedText={setExtractedText}
+            extractedText={extractedText}
+          />
         </div>
+
         <SaveDocxButton />
       </LexicalComposer>
     </section>
