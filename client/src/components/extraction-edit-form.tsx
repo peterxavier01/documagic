@@ -2,7 +2,7 @@ import { Doc } from "../../convex/_generated/dataModel";
 
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import Editor from "@/components/lexical/text-editor";
 
 interface ExtractionEditFormProps {
   conversion: Doc<"conversions"> | undefined | null;
@@ -30,15 +30,12 @@ export default function ExtractionEditForm({
           className="outline-none focus-visible:ring-royal-blue"
         />
       </div>
-      <div>
-        <Label>Extracted Text</Label>
-        <Textarea
-          value={extractedText}
-          onChange={(e) => setExtractedText(e.target.value)}
-          defaultValue={conversion?.extractedText}
-          className="outline-none focus-visible:ring-royal-blue min-h-96 resize-none"
-        />
-      </div>
+
+      <Editor
+        data={conversion?.extractedText ?? null}
+        setExtractedText={setExtractedText}
+        extractedText={extractedText}
+      />
     </form>
   );
 }
