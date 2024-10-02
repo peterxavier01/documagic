@@ -18,9 +18,11 @@ import { Route as appIndexImport } from './routes/(app)/index'
 import { Route as authRegisterImport } from './routes/(auth)/register'
 import { Route as authLoginImport } from './routes/(auth)/login'
 import { Route as ToolstextTextExtractorImport } from './routes/tools/(text)/text-extractor'
-import { Route as ToolstextNewExtractionImport } from './routes/tools/(text)/new-extraction'
 import { Route as ToolsequationEquationExtractorImport } from './routes/tools/(equation)/equation-extractor'
-import { Route as ToolstextExtractionExtractionIdImport } from './routes/tools/(text)/extraction/$extractionId'
+import { Route as ToolstextTextNewExtractionImport } from './routes/tools/(text)/text/new-extraction'
+import { Route as ToolsequationEquationNewExtractionImport } from './routes/tools/(equation)/equation/new-extraction'
+import { Route as ToolstextTextExtractionExtractionIdImport } from './routes/tools/(text)/text/extraction/$extractionId'
+import { Route as ToolsequationEquationExtractionExtractionIdImport } from './routes/tools/(equation)/equation/extraction/$extractionId'
 
 // Create Virtual Routes
 
@@ -68,20 +70,34 @@ const ToolstextTextExtractorRoute = ToolstextTextExtractorImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const ToolstextNewExtractionRoute = ToolstextNewExtractionImport.update({
-  path: '/tools/new-extraction',
-  getParentRoute: () => rootRoute,
-} as any)
-
 const ToolsequationEquationExtractorRoute =
   ToolsequationEquationExtractorImport.update({
     path: '/tools/equation-extractor',
     getParentRoute: () => rootRoute,
   } as any)
 
-const ToolstextExtractionExtractionIdRoute =
-  ToolstextExtractionExtractionIdImport.update({
-    path: '/tools/extraction/$extractionId',
+const ToolstextTextNewExtractionRoute = ToolstextTextNewExtractionImport.update(
+  {
+    path: '/tools/text/new-extraction',
+    getParentRoute: () => rootRoute,
+  } as any,
+)
+
+const ToolsequationEquationNewExtractionRoute =
+  ToolsequationEquationNewExtractionImport.update({
+    path: '/tools/equation/new-extraction',
+    getParentRoute: () => rootRoute,
+  } as any)
+
+const ToolstextTextExtractionExtractionIdRoute =
+  ToolstextTextExtractionExtractionIdImport.update({
+    path: '/tools/text/extraction/$extractionId',
+    getParentRoute: () => rootRoute,
+  } as any)
+
+const ToolsequationEquationExtractionExtractionIdRoute =
+  ToolsequationEquationExtractionExtractionIdImport.update({
+    path: '/tools/equation/extraction/$extractionId',
     getParentRoute: () => rootRoute,
   } as any)
 
@@ -138,13 +154,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ToolsequationEquationExtractorImport
       parentRoute: typeof rootRoute
     }
-    '/tools/(text)/new-extraction': {
-      id: '/tools/new-extraction'
-      path: '/tools/new-extraction'
-      fullPath: '/tools/new-extraction'
-      preLoaderRoute: typeof ToolstextNewExtractionImport
-      parentRoute: typeof rootRoute
-    }
     '/tools/(text)/text-extractor': {
       id: '/tools/text-extractor'
       path: '/tools/text-extractor'
@@ -152,11 +161,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ToolstextTextExtractorImport
       parentRoute: typeof rootRoute
     }
-    '/tools/(text)/extraction/$extractionId': {
-      id: '/tools/extraction/$extractionId'
-      path: '/tools/extraction/$extractionId'
-      fullPath: '/tools/extraction/$extractionId'
-      preLoaderRoute: typeof ToolstextExtractionExtractionIdImport
+    '/tools/(equation)/equation/new-extraction': {
+      id: '/tools/equation/new-extraction'
+      path: '/tools/equation/new-extraction'
+      fullPath: '/tools/equation/new-extraction'
+      preLoaderRoute: typeof ToolsequationEquationNewExtractionImport
+      parentRoute: typeof rootRoute
+    }
+    '/tools/(text)/text/new-extraction': {
+      id: '/tools/text/new-extraction'
+      path: '/tools/text/new-extraction'
+      fullPath: '/tools/text/new-extraction'
+      preLoaderRoute: typeof ToolstextTextNewExtractionImport
+      parentRoute: typeof rootRoute
+    }
+    '/tools/(equation)/equation/extraction/$extractionId': {
+      id: '/tools/equation/extraction/$extractionId'
+      path: '/tools/equation/extraction/$extractionId'
+      fullPath: '/tools/equation/extraction/$extractionId'
+      preLoaderRoute: typeof ToolsequationEquationExtractionExtractionIdImport
+      parentRoute: typeof rootRoute
+    }
+    '/tools/(text)/text/extraction/$extractionId': {
+      id: '/tools/text/extraction/$extractionId'
+      path: '/tools/text/extraction/$extractionId'
+      fullPath: '/tools/text/extraction/$extractionId'
+      preLoaderRoute: typeof ToolstextTextExtractionExtractionIdImport
       parentRoute: typeof rootRoute
     }
   }
@@ -172,9 +202,11 @@ export const routeTree = rootRoute.addChildren({
   appIndexRoute,
   ToolsIndexRoute,
   ToolsequationEquationExtractorRoute,
-  ToolstextNewExtractionRoute,
   ToolstextTextExtractorRoute,
-  ToolstextExtractionExtractionIdRoute,
+  ToolsequationEquationNewExtractionRoute,
+  ToolstextTextNewExtractionRoute,
+  ToolsequationEquationExtractionExtractionIdRoute,
+  ToolstextTextExtractionExtractionIdRoute,
 })
 
 /* prettier-ignore-end */
@@ -192,9 +224,11 @@ export const routeTree = rootRoute.addChildren({
         "/",
         "/tools/",
         "/tools/equation-extractor",
-        "/tools/new-extraction",
         "/tools/text-extractor",
-        "/tools/extraction/$extractionId"
+        "/tools/equation/new-extraction",
+        "/tools/text/new-extraction",
+        "/tools/equation/extraction/$extractionId",
+        "/tools/text/extraction/$extractionId"
       ]
     },
     "/login": {
@@ -218,14 +252,20 @@ export const routeTree = rootRoute.addChildren({
     "/tools/equation-extractor": {
       "filePath": "tools/(equation)/equation-extractor.tsx"
     },
-    "/tools/new-extraction": {
-      "filePath": "tools/(text)/new-extraction.tsx"
-    },
     "/tools/text-extractor": {
       "filePath": "tools/(text)/text-extractor.tsx"
     },
-    "/tools/extraction/$extractionId": {
-      "filePath": "tools/(text)/extraction/$extractionId.tsx"
+    "/tools/equation/new-extraction": {
+      "filePath": "tools/(equation)/equation/new-extraction.tsx"
+    },
+    "/tools/text/new-extraction": {
+      "filePath": "tools/(text)/text/new-extraction.tsx"
+    },
+    "/tools/equation/extraction/$extractionId": {
+      "filePath": "tools/(equation)/equation/extraction/$extractionId.tsx"
+    },
+    "/tools/text/extraction/$extractionId": {
+      "filePath": "tools/(text)/text/extraction/$extractionId.tsx"
     }
   }
 }
