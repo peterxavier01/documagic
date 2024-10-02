@@ -10,6 +10,8 @@ import Heading from "@/components/heading";
 import { Button } from "@/components/ui/button";
 import ExtractionCard from "@/components/extraction-card";
 
+import Empty from "../../../assets/empty.jpg";
+
 export const Route = createFileRoute("/tools/(text)/text-extractor")({
   component: TextExtractor,
 });
@@ -29,7 +31,9 @@ function TextExtractor() {
     return (
       <div className="min-h-screen flex flex-col gap-4 items-center justify-center bg-white">
         <div className="size-8 rounded-full border-4 border-slate-800 border-t-transparent animate-spin " />
-        <p>Loading user information...</p>
+        <p className="text-primary font-medium text-lg">
+          Docu<span className="text-coral">Magic</span>
+        </p>
       </div>
     );
   }
@@ -53,21 +57,36 @@ function TextExtractor() {
           </div>
         </section>
 
-        <section>
-          <div className="space-y-4">
-            {results?.map((item) => (
-              <ExtractionCard key={item._id} item={item} />
-            ))}
+        {!results.length ? (
+          <div className="flex flex-col items-center">
+            <div className="max-w-[500px] h-auto">
+              <img
+                src={Empty}
+                alt="illustration with a screen showing 'no data'"
+                className="w-full block"
+              />
+            </div>
+            <p className="font-medium text-base md:text-lg">
+              No extractions yet.
+            </p>
           </div>
+        ) : (
+          <section>
+            <div className="space-y-4">
+              {results?.map((item) => (
+                <ExtractionCard key={item._id} item={item} />
+              ))}
+            </div>
 
-          <Button
-            onClick={() => loadMore(5)}
-            disabled={status !== "CanLoadMore"}
-            className="flex mt-4 ml-auto bg-dark-gray text-white hover:bg-dark-gray/80"
-          >
-            Load More
-          </Button>
-        </section>
+            <Button
+              onClick={() => loadMore(5)}
+              disabled={status !== "CanLoadMore"}
+              className="flex mt-4 ml-auto bg-dark-gray text-white hover:bg-dark-gray/80"
+            >
+              Load More
+            </Button>
+          </section>
+        )}
       </div>
     </main>
   );
