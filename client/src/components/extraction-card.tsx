@@ -1,16 +1,17 @@
 import { getImageURL } from "@/lib/utils";
 import { Doc, Id } from "../../convex/_generated/dataModel";
-
-import { Card, CardTitle } from "@/components/ui/card";
-import { Button } from "./ui/button";
 import { ArrowUpRight } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 
+import { Card, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+
 interface ExtractionCardProps {
   item: Doc<"conversions">;
+  href: string;
 }
 
-export default function ExtractionCard({ item }: ExtractionCardProps) {
+export default function ExtractionCard({ item, href }: ExtractionCardProps) {
   const storageId = item.documentId as Id<"conversions">;
   const imageURL = getImageURL(storageId);
 
@@ -26,7 +27,7 @@ export default function ExtractionCard({ item }: ExtractionCardProps) {
 
           <CardTitle className="text-primary font-medium line-clamp-1 md:text-wrap">
             <Link
-              to="/tools/extraction/$extractionId"
+              to={href}
               params={{ extractionId: item._id }}
               title={item.documentName}
             >
@@ -35,10 +36,7 @@ export default function ExtractionCard({ item }: ExtractionCardProps) {
           </CardTitle>
         </div>
 
-        <Link
-          to="/tools/extraction/$extractionId"
-          params={{ extractionId: item._id }}
-        >
+        <Link to={href} params={{ extractionId: item._id }}>
           <Button
             variant="outline"
             className="hidden transition md:group-hover:flex hover:bg-dark-gray hover:text-white"
