@@ -23,7 +23,7 @@ function TextExtractor() {
   // Don't run the query if userId is undefined
   const { results, status, loadMore } = usePaginatedQuery(
     api.files.getConversions,
-    userId ? { userId } : "skip",
+    userId ? { userId, toolUsed: "text extractor" } : "skip",
     { initialNumItems: 10 }
   );
 
@@ -48,7 +48,7 @@ function TextExtractor() {
             <Heading title="Text Extractor" className="mt-4 text-slate-800" />
           </div>
           <div>
-            <Link to="/tools/new-extraction">
+            <Link to="/tools/text/new-extraction">
               <Button className="gap-2">
                 <Plus />
                 <span>New Extraction</span>
@@ -74,7 +74,11 @@ function TextExtractor() {
           <section>
             <div className="space-y-4">
               {results?.map((item) => (
-                <ExtractionCard key={item._id} item={item} />
+                <ExtractionCard
+                  key={item._id}
+                  item={item}
+                  href="/tools/text/extraction/$extractionId"
+                />
               ))}
             </div>
 
