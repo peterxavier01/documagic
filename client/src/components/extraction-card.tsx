@@ -15,7 +15,7 @@ export default function ExtractionCard({ item }: ExtractionCardProps) {
   const imageURL = getImageURL(storageId);
 
   return (
-    <Card key={item._id} className="bg-off-white group">
+    <Card key={item._id} className="bg-off-white group rounded-lg">
       <div className="flex gap-4 items-center justify-between">
         <div className="flex gap-4 items-center">
           <img
@@ -38,7 +38,6 @@ export default function ExtractionCard({ item }: ExtractionCardProps) {
         <Link
           to="/tools/extraction/$extractionId"
           params={{ extractionId: item._id }}
-          title={item.documentName}
         >
           <Button
             variant="outline"
