@@ -42,3 +42,15 @@ export function clipText(text: string, maxLength: number) {
 
   return text;
 }
+
+export function getServerURL(): string {
+  let serverURL;
+
+  if (import.meta.env.DEV) {
+    serverURL = import.meta.env.VITE_DEV_SERVER_URL;
+  } else if (import.meta.env.PROD) {
+    serverURL = import.meta.env.VITE_PROD_SERVER_URL;
+  }
+
+  return serverURL;
+}
