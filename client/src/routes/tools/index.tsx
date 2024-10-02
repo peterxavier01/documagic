@@ -4,16 +4,6 @@ import { tools } from "@/lib/data";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/tools/")({
-  // beforeLoad: async ({ context, location }) => {
-  //   if (!context.auth.isAuthenticated) {
-  //     throw redirect({
-  //       to: "/login",
-  //       search: {
-  //         redirect: location.href,
-  //       },
-  //     });
-  //   }
-  // },
   component: Tools,
 });
 
