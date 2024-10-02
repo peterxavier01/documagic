@@ -1,12 +1,11 @@
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { Download } from "lucide-react";
 import {
   $createParagraphNode,
   $createTextNode,
   $getRoot,
-  $getSelection,
-  $isRangeSelection,
   EditorState,
+  ParagraphNode,
   TextNode,
 } from "lexical";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
@@ -23,10 +22,11 @@ import { Button } from "@/components/ui/button";
 import { saveTextAsDocx } from "@/lib/text-to-docx";
 
 import "./editor-module.css";
+import { useEditorStateStore } from "@/hooks/use-editor-state";
 
 const editorConfig = {
   namespace: "MyEditor",
-  nodes: [TextNode],
+  nodes: [TextNode, ParagraphNode],
   onError(error: Error) {
     throw error;
   },
@@ -43,67 +43,82 @@ type EditorProps = {
 function EditorContent({ data, setExtractedText }: EditorProps) {
   const [editor] = useLexicalComposerContext();
 
-  // Function to handle changes in the editor
+  // Function to handle changes in the editor content
   function handleEditorChange(editorState: EditorState) {
     editorState.read(() => {
       const root = $getRoot();
       const textContent = root.getTextContent();
+
       if (setExtractedText) {
-        setExtractedText(textContent); // Update editor state
+        setExtractedText(textContent); // Update extracted text state
       }
     });
+
+    const isEmpty = editor.getEditorState().isEmpty();
+    const setIsEditorEmpty = useEditorStateStore.getState().setIsEditorEmpty;
+    setIsEditorEmpty(isEmpty); // Update editor empty state
   }
 
-  // Inject text into editor when data is loaded from the API.
-  useEffect(() => {
-    if (data) {
+  // Function to inject text from the API into the editor
+  const injectDataIntoEditor = useCallback(
+    (data: string) => {
       editor.update(() => {
         const root = $getRoot();
-        const existingContent = root.getTextContent();
 
-        // Only inject text if it isn't already present in the editor
-        if (!existingContent.includes(data)) {
-          const paragraphNode = $createParagraphNode();
-          const textNode = $createTextNode(data);
-          paragraphNode.append(textNode);
+        // Clear all existing content in the editor
+        root.clear();
 
-          const selection = $getSelection();
+        // Create a new paragraph node and append the text from data
+        const paragraphNode = $createParagraphNode();
+        const textNode = $createTextNode(data);
+        paragraphNode.append(textNode);
 
-          if ($isRangeSelection(selection)) {
-            selection.insertNodes([paragraphNode]);
-          } else {
-            root.append(paragraphNode);
-          }
-        }
+        // Append the new paragraph to the root
+        root.append(paragraphNode);
       });
+    },
+    [editor]
+  );
+
+  // Effect to handle API data injection into the editor when data changes
+  useEffect(() => {
+    if (data) {
+      injectDataIntoEditor(data);
     }
-  }, [data, editor]);
+  }, [data, injectDataIntoEditor]); // Only inject data when it changes
 
   return (
-    <div className="editor-inner">
-      <RichTextPlugin
-        contentEditable={
-          <ContentEditable
-            className="editor-input"
-            aria-placeholder={placeholder}
-            placeholder={
-              <div className="editor-placeholder">{placeholder}</div>
-            }
-          />
-        }
-        ErrorBoundary={LexicalErrorBoundary}
-      />
-      <HistoryPlugin />
-      <OnChangePlugin onChange={handleEditorChange} />
-    </div>
+    <>
+      <div className="editor-inner">
+        <RichTextPlugin
+          contentEditable={
+            <ContentEditable
+              className="editor-input"
+              aria-placeholder={placeholder}
+              placeholder={
+                <div className="editor-placeholder">{placeholder}</div>
+              }
+            />
+          }
+          ErrorBoundary={LexicalErrorBoundary}
+        />
+        <HistoryPlugin />
+        <OnChangePlugin onChange={handleEditorChange} />
+      </div>
+    </>
   );
 }
 
 function SaveDocxButton() {
   const [editor] = useLexicalComposerContext();
+  const isEditorEmpty = useEditorStateStore((state) => state.isEditorEmpty);
 
   return (
-    <Button onClick={() => saveTextAsDocx(editor)} className="mt-4 gap-2">
+    <Button
+      onClick={() => saveTextAsDocx(editor)}
+      className="mt-4 gap-2"
+      disabled={isEditorEmpty}
+    >
       <Download />
       <span>Save as DOCX</span>
     </Button>
