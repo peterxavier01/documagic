@@ -23,6 +23,29 @@ export const getUploadsByUserId = query({
 });
 
 /**
+ * Retrieve recent uploads
+ */
+export const getRecentUploads = query({
+  args: { toolUsed: v.string() },
+  handler: async (ctx, args) => {
+    const user = await getCurrentUserOrThrow(ctx);
+
+    if (!user) {
+      return null;
+    }
+
+    const uploads = await ctx.db
+      .query("conversions")
+      .filter((q) => q.eq(q.field("userId"), user._id))
+      .filter((q) => q.eq(q.field("toolUsed"), args.toolUsed))
+      .order("desc")
+      .take(5);
+
+    return uploads;
+  },
+});
+
+/**
  * This mutation generates a 1hr upload URL for a file in the storage bucket. The upload URL is used to upload a file directly to the storage bucketURL
  */
 export const generateUploadUrl = mutation(async (ctx) => {
@@ -58,11 +81,16 @@ export const sendImage = mutation({
  * Returns a list of all conversions with pagination
  */
 export const getConversions = query({
-  args: { paginationOpts: paginationOptsValidator, userId: v.id("users") },
+  args: {
+    paginationOpts: paginationOptsValidator,
+    userId: v.id("users"),
+    toolUsed: v.string(),
+  },
   handler: async (ctx, args) => {
     const conversions = await ctx.db
       .query("conversions")
       .filter((q) => q.eq(q.field("userId"), args.userId))
+      .filter((q) => q.eq(q.field("toolUsed"), args.toolUsed))
       .order("desc")
       .paginate(args.paginationOpts);
 
