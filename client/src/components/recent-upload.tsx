@@ -14,8 +14,12 @@ import Heading from "@/components/heading";
 
 import { convertBytes } from "@/lib/utils";
 
-export default function RecentUpload() {
-  const uploads = useQuery(api.files.getUploadsByUserId);
+interface RecentUploadProps {
+  toolUsed: "text extractor" | "equation extractor";
+}
+
+export default function RecentUpload({ toolUsed }: RecentUploadProps) {
+  const uploads = useQuery(api.files.getRecentUploads, { toolUsed });
 
   return (
     <section className="mt-14">
@@ -32,7 +36,7 @@ export default function RecentUpload() {
         <TableBody>
           {uploads
             ? uploads.map((upload) => {
-                if (upload.toolUsed !== "text extractor") return null;
+                if (upload.toolUsed !== toolUsed) return null;
 
                 return (
                   <TableRow key={upload._id}>
